@@ -2,6 +2,27 @@
 // для миттєвого відображення в UI (прогрес-бар, підсумок доставки).
 // Фінальний розрахунок і перевірку завжди виконує сервер у POST /api/orders.
 
+// Заглушка для товарів без фото й для фото, що не завантажилися.
+const PLACEHOLDER_IMG = '/assets/placeholders/kitchen.svg';
+// Заглушка для розділу «Бар» — сумна кружка пива.
+const PLACEHOLDER_BAR_IMG = '/assets/placeholders/bar.svg';
+// Обирає заглушку за поточним розділом (кухня — тарілка, бар — кружка).
+function placeholderFor(section) {
+  return section === 'bar' ? PLACEHOLDER_BAR_IMG : PLACEHOLDER_IMG;
+}
+
+// Якщо фото товару не завантажилося (файл зник, обрив мережі) — підставляємо
+// заглушку замість зламаного значка. Подія error не спливає, тому слухаємо її
+// на capture-фазі; inline onerror заборонений політикою CSP (helmet).
+document.addEventListener('error', (e) => {
+  const img = e.target;
+  if (!(img instanceof HTMLImageElement)) return;
+  if (img.dataset.fallback || img.src.endsWith(PLACEHOLDER_IMG) || img.src.endsWith(PLACEHOLDER_BAR_IMG)) return;
+  img.dataset.fallback = '1';
+  img.alt = '';
+  img.src = placeholderFor(state.section);
+}, true);
+
 const state = {
   section: 'kitchen',
   categoryId: null,
@@ -180,14 +201,15 @@ function renderProducts() {
     const badges = [];
     if (!p.inStock) badges.push('<span class="badge badge--out">Немає в наявності</span>');
     if (p.isNew) badges.push('<span class="badge badge--new">New</span>');
-    if (p.isSpicy) badges.push('<span class="badge badge--spicy">Гостро</span>');
+    if (p.isSpicy) badges.push('<span class="badge badge--spicy">Hot</span>');
 
-    const thumb = productImageUrl(p.imageUrl, 'thumb');
+    const hasPhoto = !!p.imageUrl;
+    const thumb = hasPhoto ? productImageUrl(p.imageUrl, 'thumb') : placeholderFor(state.section);
     if (!p.inStock) card.classList.add('is-sold-out');
 
     card.innerHTML = `
-      <div class="card__image${thumb ? ' has-img' : ''}">
-        ${thumb ? `<img src="${escapeHtml(thumb)}" alt="${escapeHtml(p.name)}" loading="lazy" decoding="async" width="600" height="450" />` : escapeHtml(p.name.charAt(0))}
+      <div class="card__image has-img">
+        <img src="${escapeHtml(thumb)}" alt="${hasPhoto ? escapeHtml(p.name) : ''}" loading="lazy" decoding="async" width="600" height="450" />
         <div class="card__badges">${badges.join('')}</div>
       </div>
       <div class="card__body">
@@ -366,15 +388,15 @@ function openModal(product) {
   modalQty = 1;
   els.qtyValue.textContent = '1';
 
-  const fullImg = productImageUrl(product.imageUrl);
-  els.modalImage.classList.toggle('has-img', !!fullImg);
-  els.modalImage.innerHTML = fullImg
-    ? `<img src="${escapeHtml(fullImg)}" alt="${escapeHtml(product.name)}" decoding="async" />`
-    : escapeHtml(product.name.charAt(0));
+  const hasPhoto = !!product.imageUrl;
+  const fullImg = hasPhoto ? productImageUrl(product.imageUrl) : placeholderFor(state.section);
+  els.modalImage.classList.add('has-img');
+  els.modalImage.innerHTML =
+    `<img src="${escapeHtml(fullImg)}" alt="${hasPhoto ? escapeHtml(product.name) : ''}" decoding="async" />`;
   els.modalAdd.disabled = !product.inStock;
   els.modalBadges.innerHTML = [
     product.isNew ? '<span class="badge badge--new">New</span>' : '',
-    product.isSpicy ? '<span class="badge badge--spicy">Гостро</span>' : '',
+    product.isSpicy ? '<span class="badge badge--spicy">Hot</span>' : '',
   ].join('');
   els.modalTitle.textContent = product.name;
   els.modalUnit.textContent = product.unit;

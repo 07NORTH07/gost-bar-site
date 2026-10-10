@@ -38,7 +38,8 @@
 
 **For visitors**
 
-- 🍽️ Menu with **Kitchen / Bar** sections, categories, search by name (300 ms debounce)
+- 🍽️ Menu with **Kitchen / Bar** sections, categories, search by name (300 ms debounce); **New** / **Hot** badges on cards
+- 🖼️ Items without a photo get an SVG stub that matches the section: a plate for the kitchen, a beer mug for the bar
 - 🛒 Cart that survives a page reload (`localStorage`): quantity, removal, promo code
 - 🚚 Progress bar to free delivery (from 500 ₴) and a "Often ordered together" block
 - 📍 Delivery **only within Ivano-Frankivsk**: street picked from suggestions, separate fields for house, apartment, entrance, floor and intercom; or pickup
@@ -61,16 +62,22 @@
 
 <table>
   <tr>
-    <td align="center"><b>Catalog</b></td>
+    <td align="center"><b>Kitchen</b></td>
+    <td align="center"><b>Bar</b></td>
     <td align="center"><b>Product window</b></td>
     <td align="center"><b>Checkout</b></td>
+    <td align="center"><b>Admin panel</b></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/mobile.png" alt="Catalog on mobile" width="260"></td>
-    <td><img src="docs/screenshots/mobile-modal.png" alt="Product window on mobile" width="260"></td>
-    <td><img src="docs/screenshots/mobile-checkout.png" alt="Checkout on mobile" width="260"></td>
+    <td><img src="docs/screenshots/mobile.png" alt="Kitchen catalog on mobile" width="180"></td>
+    <td><img src="docs/screenshots/mobile-bar.png" alt="Bar catalog on mobile" width="180"></td>
+    <td><img src="docs/screenshots/mobile-modal.png" alt="Product window on mobile" width="180"></td>
+    <td><img src="docs/screenshots/mobile-checkout.png" alt="Checkout on mobile" width="180"></td>
+    <td><img src="docs/screenshots/admin-mobile.png" alt="Admin panel on mobile" width="180"></td>
   </tr>
 </table>
+
+<p align="center"><img src="docs/screenshots/desktop-bar.png" alt="Bar section on desktop" width="900"></p>
 
 ## Quick start
 
@@ -166,8 +173,10 @@ gost-bar-site/
 │   │   ├── api.js                # fetch wrapper
 │   │   ├── cart.js               # cart (localStorage + pub/sub)
 │   │   └── app.js                # catalog, modal, cart, checkout, likes
-│   ├── assets/products/          # demo product photo (full + -sm thumbnail)
-│   └── admin/                    # admin UI
+│   ├── assets/
+│   │   ├── placeholders/         # SVG stubs for items without a photo (kitchen.svg, bar.svg)
+│   │   └── products/             # demo product photo (full + -sm thumbnail)
+│   └── admin/                    # admin UI (index.html, admin.css, admin.js)
 ├── docs/screenshots/             # images for this README
 ├── uploads/                      # product photos (created automatically, not in git)
 ├── .env.example                  # example settings
@@ -260,7 +269,8 @@ The venue name, address and menu items in `seed.js` are for demonstration, colle
 
 **Для відвідувача**
 
-- 🍽️ Меню з розділами **Кухня / Бар**, категорії, пошук за назвою (debounce 300 мс)
+- 🍽️ Меню з розділами **Кухня / Бар**, категорії, пошук за назвою (debounce 300 мс); позначки **New** / **Hot** на картках
+- 🖼️ Товари без фото отримують SVG-заглушку за розділом: тарілка для кухні, кружка пива для бару
 - 🛒 Кошик, що переживає перезавантаження (`localStorage`): кількість, видалення, промокод
 - 🚚 Прогрес до безкоштовної доставки (від 500 ₴) і блок «Часто беруть разом»
 - 📍 Доставка **лише по Івано-Франківську**: вулиця обирається з підказок, окремі поля — будинок, квартира, під'їзд, поверх, домофон; або самовивіз
@@ -283,16 +293,22 @@ The venue name, address and menu items in `seed.js` are for demonstration, colle
 
 <table>
   <tr>
-    <td align="center"><b>Каталог</b></td>
+    <td align="center"><b>Кухня</b></td>
+    <td align="center"><b>Бар</b></td>
     <td align="center"><b>Вікно товару</b></td>
     <td align="center"><b>Оформлення</b></td>
+    <td align="center"><b>Адмінка</b></td>
   </tr>
   <tr>
-    <td><img src="docs/screenshots/mobile.png" alt="Каталог на телефоні" width="260"></td>
-    <td><img src="docs/screenshots/mobile-modal.png" alt="Вікно товару на телефоні" width="260"></td>
-    <td><img src="docs/screenshots/mobile-checkout.png" alt="Оформлення замовлення на телефоні" width="260"></td>
+    <td><img src="docs/screenshots/mobile.png" alt="Каталог кухні на телефоні" width="180"></td>
+    <td><img src="docs/screenshots/mobile-bar.png" alt="Каталог бару на телефоні" width="180"></td>
+    <td><img src="docs/screenshots/mobile-modal.png" alt="Вікно товару на телефоні" width="180"></td>
+    <td><img src="docs/screenshots/mobile-checkout.png" alt="Оформлення замовлення на телефоні" width="180"></td>
+    <td><img src="docs/screenshots/admin-mobile.png" alt="Адмінка на телефоні" width="180"></td>
   </tr>
 </table>
+
+<p align="center"><img src="docs/screenshots/desktop-bar.png" alt="Розділ «Бар» на ПК" width="900"></p>
 
 ## Швидкий старт
 
@@ -388,8 +404,10 @@ gost-bar-site/
 │   │   ├── api.js                # обгортка над fetch
 │   │   ├── cart.js               # кошик (localStorage + pub/sub)
 │   │   └── app.js                # каталог, модалка, кошик, оформлення, вподобання
-│   ├── assets/products/          # демо-фото товару (повне + мініатюра -sm)
-│   └── admin/                    # інтерфейс адмінки
+│   ├── assets/
+│   │   ├── placeholders/         # SVG-заглушки для товарів без фото (kitchen.svg, bar.svg)
+│   │   └── products/             # демо-фото товару (повне + мініатюра -sm)
+│   └── admin/                    # інтерфейс адмінки (index.html, admin.css, admin.js)
 ├── docs/screenshots/             # картинки для цього README
 ├── uploads/                      # фото товарів (створюється сама, у git не потрапляє)
 ├── .env.example                  # приклад налаштувань

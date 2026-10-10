@@ -150,13 +150,13 @@ function productRow(p) {
     : esc(p.name.charAt(0));
   const badges =
     (p.isNew ? '<span class="badge badge--new">New</span>' : '') +
-    (p.isSpicy ? '<span class="badge badge--spicy">Гостро</span>' : '') +
+    (p.isSpicy ? '<span class="badge badge--spicy">Hot</span>' : '') +
     (p.inStock ? '' : '<span class="badge badge--off">Немає</span>');
   return `
-    <div class="item${p.inStock ? '' : ' is-off'}" data-id="${p.id}">
+    <div class="item${p.inStock ? '' : ' is-off'}${badges ? ' item--badged' : ''}" data-id="${p.id}">
       <div class="item__thumb">${thumb}</div>
-      <div>
-        <div class="item__name">${esc(p.name)}${badges}</div>
+      <div class="item__main">
+        <div class="item__name">${badges ? `<span class="item__badges">${badges}</span>` : ''}${esc(p.name)}</div>
         <div class="item__meta"><span class="item__price">${p.price} ₴</span>${p.unit ? ` · ${esc(p.unit)}` : ''}</div>
       </div>
       <div class="item__actions">
