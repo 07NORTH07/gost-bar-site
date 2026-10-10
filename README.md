@@ -1,20 +1,230 @@
 <div align="center">
 
-# 🍻 ГОСТ бар — сайт-меню з замовленням
+# 🍻 GOST Bar — menu site with online ordering
 
-**Каталог страв і напоїв → кошик → оформлення → замовлення в базі. З адмінкою.**
+**Catalog of dishes and drinks → cart → checkout → order saved in the database. With an admin panel.**
 
 ![Node.js](https://img.shields.io/badge/Node.js-%E2%89%A5%2022.5-3c873a?logo=node.js&logoColor=white)
 ![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-node%3Asqlite-003b57?logo=sqlite&logoColor=white)
 ![Frontend](https://img.shields.io/badge/Frontend-HTML%20%2F%20CSS%20%2F%20JS-e8a838)
-![Status](https://img.shields.io/badge/status-навчальний%20проєкт-lightgrey)
+![Status](https://img.shields.io/badge/status-learning%20project-lightgrey)
 
-<img src="docs/screenshots/desktop.png" alt="ГОСТ бар — десктопна версія" width="900">
+<img src="docs/screenshots/desktop.png" alt="GOST Bar — desktop version" width="900">
+
+**🇬🇧 [English](#-english)** · **🇺🇦 [Українська](#-українська)**
 
 </div>
 
 ---
+
+# 🇬🇧 English
+
+## Contents
+
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Quick start](#quick-start)
+- [Configuration](#configuration)
+- [Admin panel](#admin-panel)
+- [Project structure](#project-structure)
+- [API](#api)
+- [Security](#security)
+- [Known limitations](#known-limitations)
+- [Roadmap](#roadmap)
+- [Note about the data](#note-about-the-data)
+
+## Features
+
+**For visitors**
+
+- 🍽️ Menu with **Kitchen / Bar** sections, categories, search by name (300 ms debounce)
+- 🛒 Cart that survives a page reload (`localStorage`): quantity, removal, promo code
+- 🚚 Progress bar to free delivery (from 500 ₴) and a "Often ordered together" block
+- 📍 Delivery **only within Ivano-Frankivsk**: street picked from suggestions, separate fields for house, apartment, entrance, floor and intercom; or pickup
+- 📱 Phone (`+380`, operator code check) and name validation — on the frontend **and** on the server
+- 💳 Pay by card (demo) or cash
+- ❤️ **Likes**: a heart on the card and in the product window, counter stored in the DB, state kept between visits
+- 📲 Responsive: sidebar cart on desktop, bottom bar and full-screen checkout on mobile (quantity can be changed or items removed there)
+
+**For the owner**
+
+- 🔐 Admin panel at `/admin/`: add, edit, hide and delete products, create categories, upload photos (compressed in the browser; the real JPEG signature is verified on the server)
+
+**Under the hood**
+
+- Prices, discounts and delivery are **always calculated by the server** — they cannot be tampered with from the browser
+- All SQL queries are parameterized
+- No native dependencies: the DB is Node.js's built-in `node:sqlite` module
+
+## Screenshots
+
+<table>
+  <tr>
+    <td align="center"><b>Catalog</b></td>
+    <td align="center"><b>Product window</b></td>
+    <td align="center"><b>Checkout</b></td>
+  </tr>
+  <tr>
+    <td><img src="docs/screenshots/mobile.png" alt="Catalog on mobile" width="260"></td>
+    <td><img src="docs/screenshots/mobile-modal.png" alt="Product window on mobile" width="260"></td>
+    <td><img src="docs/screenshots/mobile-checkout.png" alt="Checkout on mobile" width="260"></td>
+  </tr>
+</table>
+
+## Quick start
+
+Requires **Node.js 22.5 or newer** (because of `node:sqlite`). Check with `node -v`. Works on Linux, macOS and Windows.
+
+```sh
+git clone https://github.com/07NORTH07/gost-bar-site.git
+cd gost-bar-site
+
+npm install        # dependencies: express, helmet, express-rate-limit
+npm run seed       # creates the DB and fills it with a demo menu and promo codes
+npm start          # http://localhost:3000
+```
+
+For development with auto-restart: `npm run dev`.
+
+Scripts:
+
+| Command | What it does |
+| --- | --- |
+| `npm start` | starts the server |
+| `npm run start:env` | same, but reads variables from the `.env` file |
+| `npm run dev` | starts with auto-restart (`node --watch`) |
+| `npm run seed` | fills the DB with demo data. Refuses to run if products already exist (so your data isn't wiped); to reset on purpose: `node server/database/seed.js --force` |
+| `node server/database/import-streets.js` | one-time download of the full list of Ivano-Frankivsk streets from OpenStreetMap (needs internet); without it, a short built-in list is used |
+
+**Try it:** add items to the cart, enter promo code `GOST10` (−10 %) or `WELCOME15` (−15 %), place an order.
+
+## Configuration
+
+An example is in [`.env.example`](.env.example). Copy it to `.env` (this file never reaches git) and run `npm run start:env`:
+
+```sh
+cp .env.example .env     # then edit .env
+npm run start:env
+```
+
+| Variable | Default | Purpose |
+| --- | --- | --- |
+| `PORT` | `3000` | server port |
+| `ADMIN_PASSWORD` | random on every start (printed to the console) | admin panel password |
+| `TRUST_PROXY` | off (enabled automatically on Render) | set to `1` if the site is behind a reverse proxy, so rate limits use the client's real IP |
+
+One-off password without a file: `ADMIN_PASSWORD='my-password' npm start` (bash/zsh) or `env ADMIN_PASSWORD='my-password' npm start` (fish).
+
+> ⚠️ If you deploy this anywhere public, **always set your own `ADMIN_PASSWORD`**.
+
+## Admin panel
+
+URL: `http://localhost:3000/admin/`. Log in with the password from `ADMIN_PASSWORD`; after 8 failed attempts in 15 minutes, login is temporarily blocked. A session lasts 12 hours and is kept in server memory (you have to log in again after a restart).
+
+## Project structure
+
+```text
+gost-bar-site/
+├── server/
+│   ├── server.js                 # entry point: helmet, limits, routes, error handling
+│   ├── middleware/
+│   │   └── client-id.js          # anonymous cookie for likes
+│   ├── routes/
+│   │   ├── categories.js         # GET  /api/categories
+│   │   ├── products.js           # GET  /api/products, likes (PUT/DELETE .../like)
+│   │   ├── orders.js             # POST /api/orders, GET /api/orders/:token
+│   │   ├── promo.js              # GET  /api/promo/:code
+│   │   ├── streets.js            # GET  /api/streets?q=
+│   │   └── admin.js              # /api/admin/* (login, products, categories, photos)
+│   └── database/
+│       ├── schema.sql            # DB schema
+│       ├── db.js                 # SQLite connection, migrations on start
+│       ├── seed.js               # demo data
+│       ├── import-streets.js     # street import from OpenStreetMap
+│       └── streets-fallback.json # starter street list
+├── public/
+│   ├── index.html                # site page
+│   ├── css/style.css             # styles and design tokens
+│   ├── js/
+│   │   ├── api.js                # fetch wrapper
+│   │   ├── cart.js               # cart (localStorage + pub/sub)
+│   │   └── app.js                # catalog, modal, cart, checkout, likes
+│   ├── assets/icons/             # icons
+│   └── admin/                    # admin UI
+├── docs/screenshots/             # images for this README
+├── uploads/                      # product photos (created automatically, not in git)
+├── .env.example                  # example settings
+├── .gitignore
+└── package.json
+```
+
+## API
+
+**Public**
+
+| Method | URL | Description |
+| --- | --- | --- |
+| `GET` | `/api/categories?section=kitchen\|bar` | categories |
+| `GET` | `/api/products?section=&categoryId=&q=` | products (with a `liked` field for the current visitor) |
+| `GET` | `/api/products/:id` | single product |
+| `PUT` / `DELETE` | `/api/products/:id/like` | like / unlike → `{ liked, likesCount }` |
+| `GET` | `/api/promo/:code` | check a promo code |
+| `GET` | `/api/streets?q=` | street suggestions |
+| `POST` | `/api/orders` | place an order → `{ orderId, orderToken, total, … }` |
+| `GET` | `/api/orders/:token` | order by private token (not by number) |
+
+**Admin** (header `Authorization: Bearer <token>`)
+
+| Method | URL | Description |
+| --- | --- | --- |
+| `POST` | `/api/admin/login` | log in → `{ token }` |
+| `GET` | `/api/admin/me` | check session |
+| `GET` / `POST` | `/api/admin/categories` | list / new category |
+| `GET` / `POST` | `/api/admin/products` | list / new product |
+| `PUT` / `DELETE` | `/api/admin/products/:id` | update / delete a product |
+
+## Security
+
+What is in place:
+
+- **Order privacy.** An order can only be read with a long random token (192 bits), not by a number that could be enumerated
+- **Rate limits** per IP: orders, promo codes, likes, admin login
+- **`helmet`**: protective HTTP headers and Content-Security-Policy
+- **The server never trusts the client**: prices, discounts, delivery, quantities and availability are checked and calculated on the backend
+- **SQL injection**: all queries are parameterized
+- **XSS**: all dynamic text is escaped (including quotes in attributes)
+- **Photos**: real JPEG signature check, size limit, protection against `../` on deletion
+- **Admin**: constant-time password comparison, expiring token, password is not stored in code but read from an environment variable
+- **Errors**: the client sees a short JSON message; stack traces stay in the server console
+- **Secrets and customer data** never reach the repository: see `.gitignore` (`.env`, database, `uploads/`)
+
+## Known limitations
+
+This is a learning project, not a production-ready shop:
+
+- 💳 **Card payment is a demo.** Card data is only validated in the form (mask, Luhn check, expiry) and is **never sent anywhere**; no money is charged, and a card order is immediately marked as paid. Real payments need an acquirer (LiqPay, WayForPay, Monobank)
+- 🔑 The admin panel has one shared password and no roles
+- 🧠 Admin sessions and rate-limit counters live in process memory (lost on restart, don't scale to several instances)
+- 🔒 The server does not enable HTTPS itself — your host or reverse proxy must provide it
+- 💾 SQLite and the `uploads/` folder live on disk. On free hosts with ephemeral disks (e.g. Render free) they disappear on every new deploy — an external DB and persistent storage for photos are needed
+- ❤️ Likes are anonymous: clearing cookies lets you like again. Only the per-IP limit protects against mass inflation
+
+## Roadmap
+
+- [ ] Users with `ADMIN` / `MANAGER` roles (hashed passwords, logout)
+- [ ] Order status management page in the admin panel
+- [ ] Real payments through an acquirer
+- [ ] External DB and photo storage + hosting deployment
+- [ ] One-time promo codes and a minimum order amount
+
+## Note about the data
+
+The venue name, address and menu items in `seed.js` are for demonstration, collected from screenshots of a real venue for a learning project; this site is not affiliated with it and is not official. Product photos are not part of the repository — cards show the first letter of the name instead; real photos are added through the admin panel.
+
+---
+
+# 🇺🇦 Українська
 
 ## Зміст
 
@@ -24,13 +234,11 @@
 - [Налаштування (змінні середовища)](#налаштування-змінні-середовища)
 - [Адмінка](#адмінка)
 - [Структура проєкту](#структура-проєкту)
-- [API](#api)
+- [API](#api-1)
 - [Безпека](#безпека)
 - [Відомі обмеження](#відомі-обмеження)
 - [Плани](#плани)
 - [Примітка щодо даних](#примітка-щодо-даних)
-
----
 
 ## Можливості
 
@@ -72,10 +280,10 @@
 
 ## Швидкий старт
 
-Потрібен **Node.js 22.5 або новіший** (через `node:sqlite`). Перевірити: `node -v`.
+Потрібен **Node.js 22.5 або новіший** (через `node:sqlite`). Перевірити: `node -v`. Працює на Linux, macOS і Windows.
 
 ```sh
-git clone https://github.com/<твій-нік>/gost-bar-site.git
+git clone https://github.com/07NORTH07/gost-bar-site.git
 cd gost-bar-site
 
 npm install        # залежності: express, helmet, express-rate-limit
@@ -99,7 +307,12 @@ npm start          # http://localhost:3000
 
 ## Налаштування (змінні середовища)
 
-Приклад лежить у [`.env.example`](.env.example). Скопіюйте його в `.env` (цей файл у git не потрапляє) і запускайте `npm run start:env`.
+Приклад лежить у [`.env.example`](.env.example). Скопіюйте його в `.env` (цей файл у git не потрапляє) і запускайте `npm run start:env`:
+
+```sh
+cp .env.example .env     # потім відредагуйте .env
+npm run start:env
+```
 
 | Змінна | За замовчуванням | Призначення |
 | --- | --- | --- |
@@ -108,6 +321,8 @@ npm start          # http://localhost:3000
 | `TRUST_PROXY` | вимкнено (на Render вмикається сам) | `1`, якщо сайт стоїть за reverse-proxy — тоді ліміти запитів рахуються по справжній IP клієнта |
 
 Разова зміна пароля без файлу: `ADMIN_PASSWORD='мій-пароль' npm start` (bash/zsh) або `env ADMIN_PASSWORD='мій-пароль' npm start` (fish).
+
+> ⚠️ Якщо публікуєте сайт у мережі, **обов'язково задайте власний `ADMIN_PASSWORD`**.
 
 ## Адмінка
 
