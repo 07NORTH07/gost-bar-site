@@ -166,7 +166,7 @@ gost-bar-site/
 │   │   ├── api.js                # fetch wrapper
 │   │   ├── cart.js               # cart (localStorage + pub/sub)
 │   │   └── app.js                # catalog, modal, cart, checkout, likes
-│   ├── assets/icons/             # icons
+│   ├── assets/products/          # demo product photo (full + -sm thumbnail)
 │   └── admin/                    # admin UI
 ├── docs/screenshots/             # images for this README
 ├── uploads/                      # product photos (created automatically, not in git)
@@ -236,7 +236,7 @@ This is a learning project, not a production-ready shop:
 
 ## Note about the data
 
-The venue name, address and menu items in `seed.js` are for demonstration, collected from screenshots of a real venue for a learning project; this site is not affiliated with it and is not official. Product photos are not part of the repository — cards show the first letter of the name instead; real photos are added through the admin panel.
+The venue name, address and menu items in `seed.js` are for demonstration, collected from screenshots of a real venue for a learning project; this site is not affiliated with it and is not official. Only one product (cheese sticks) has a demo photo, generated with AI; all other cards show the first letter of the name. Real photos are added through the admin panel (they go to `uploads/`, which is not in git).
 
 ---
 
@@ -388,7 +388,7 @@ gost-bar-site/
 │   │   ├── api.js                # обгортка над fetch
 │   │   ├── cart.js               # кошик (localStorage + pub/sub)
 │   │   └── app.js                # каталог, модалка, кошик, оформлення, вподобання
-│   ├── assets/icons/             # іконки
+│   ├── assets/products/          # демо-фото товару (повне + мініатюра -sm)
 │   └── admin/                    # інтерфейс адмінки
 ├── docs/screenshots/             # картинки для цього README
 ├── uploads/                      # фото товарів (створюється сама, у git не потрапляє)
@@ -458,4 +458,4 @@ gost-bar-site/
 
 ## Примітка щодо даних
 
-Назва закладу, адреса й позиції меню в `seed.js` — демонстраційні, зібрані зі скріншотів реального закладу для навчального проєкту; сайт із ним не пов'язаний і не є офіційним. Фото товарів у репозиторій не входять — на картках замість них перша літера назви; реальні фото додаються через адмінку.
+Назва закладу, адреса й позиції меню в `seed.js` — демонстраційні, зібрані зі скріншотів реального закладу для навчального проєкту; сайт із ним не пов'язаний і не є офіційним. Лише один товар (сирні палички) має демо-фото, згенероване штучним інтелектом; на решті карток — перша літера назви. Реальні фото додаються через адмінку (вони потрапляють в `uploads/`, якого немає в git).

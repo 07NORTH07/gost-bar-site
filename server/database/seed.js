@@ -57,7 +57,7 @@ const cKitchenFirst = addCategory('kitchen', 'На перше', 3);
 const cKitchenSalads = addCategory('kitchen', 'Салати', 4);
 const cKitchenDesserts = addCategory('kitchen', 'Десерти', 5);
 
-addProduct(cKitchenStarters, { name: 'Сирні палички з соусом', description: 'Сир твердий, олія, кукурудзяні пластівці', price: 95, unit: '180 г', likes: 93 });
+addProduct(cKitchenStarters, { name: 'Сирні палички з соусом', description: 'Сир твердий, олія, кукурудзяні пластівці', price: 95, unit: '180 г', likes: 93, image_url: '/assets/products/syrni-palochky.jpg' });
 addProduct(cKitchenStarters, { name: 'Дошка снекова', description: 'Сир косичка, фрі, телятина в’ялена', price: 265, unit: '430 г', likes: 17 });
 addProduct(cKitchenStarters, { name: 'Нагетси з соусом', description: 'Курячі нагетси, вареники фрі, попкорн', price: 100, unit: '200 г', isNew: true, likes: 41 });
 addProduct(cKitchenStarters, { name: 'Дошка фрі', description: 'Картопля фрі, соуси', price: 250, unit: '700 г', likes: 58 });
