@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="robots" content="noindex, nofollow" />
+<title>ГОСТ бар — адмінка</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Manrope:wght@400;500;600;700&display=swap" />
+<link rel="stylesheet" href="admin.css" />
+</head>
+<body>
+
+<!-- ===== Вхід ===== -->
+<main class="login" id="loginView">
+  <form class="login__box" id="loginForm">
+    <span class="brand__mark">Г</span>
+    <h1>Адмінка меню</h1>
+    <p class="muted">Пароль задається змінною <code>ADMIN_PASSWORD</code> при запуску сервера.</p>
+    <input class="input" id="loginPassword" type="password" placeholder="Пароль" autocomplete="current-password" required />
+    <p class="error" id="loginError" hidden></p>
+    <button class="btn" type="submit">Увійти</button>
+    <a class="muted link" href="/">← на сайт</a>
+  </form>
+</main>
+
+<!-- ===== Адмінка ===== -->
+<div id="appView" hidden>
+  <header class="topbar">
+    <div class="topbar__left">
+      <span class="brand__mark">Г</span>
+      <strong>Меню бару</strong>
+    </div>
+    <div class="topbar__right">
+      <a class="btn btn--ghost" href="/" target="_blank" rel="noopener">Відкрити сайт</a>
+      <button class="btn btn--ghost" id="logoutBtn" type="button">Вийти</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- Форма товару -->
+    <section class="panel" id="formPanel">
+      <h2 id="formTitle">Новий товар</h2>
+
+      <form id="productForm" novalidate>
+        <div class="photo">
+          <div class="photo__preview" id="photoPreview">
+            <canvas id="photoCanvas" width="600" height="450"></canvas>
+            <span class="photo__placeholder" id="photoPlaceholder">Фото ще не додано</span>
+          </div>
+          <div class="photo__controls">
+            <label class="btn btn--ghost photo__pick">
+              Обрати фото
+              <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp" hidden />
+            </label>
+            <button class="btn btn--ghost" type="button" id="photoRemove" hidden>Прибрати фото</button>
+            <div class="photo__focus" id="photoFocus" hidden>
+              <label>Зсув кадру ←→ <input type="range" id="focusX" min="0" max="100" value="50" /></label>
+              <label>Зсув кадру ↑↓ <input type="range" id="focusY" min="0" max="100" value="50" /></label>
+            </div>
+            <p class="muted small">Фото автоматично обрізається до 4:3 і стискається — однаково добре виглядає на ПК, Android та iPhone. Можна взяти будь-яке фото з телефона, до 15 МБ.</p>
+          </div>
+        </div>
+
+        <div class="field">
+          <span>Категорія</span>
+          <div class="field__row">
+            <select class="input" id="fCategory" required></select>
+            <button class="btn btn--ghost" type="button" id="newCategoryBtn">+ Нова</button>
+          </div>
+        </div>
+        <div class="field" id="newCategoryBox" hidden>
+          <span>Нова категорія</span>
+          <div class="field__row">
+            <select class="input" id="ncSection" style="max-width:110px"><option value="kitchen">Кухня</option><option value="bar">Бар</option></select>
+            <input class="input" id="ncName" maxlength="40" placeholder="Назва" />
+            <button class="btn" type="button" id="ncSave">OK</button>
+          </div>
+        </div>
+
+        <label class="field">
+          <span>Назва</span>
+          <input class="input" id="fName" maxlength="80" placeholder="Наприклад: Борщ український" required />
+        </label>
+
+        <div class="grid2">
+          <label class="field">
+            <span>Ціна, ₴</span>
+            <input class="input" id="fPrice" inputmode="numeric" placeholder="110" required />
+          </label>
+          <label class="field">
+            <span>Вага / обʼєм</span>
+            <input class="input" id="fUnit" maxlength="30" placeholder="350 г" />
+          </label>
+        </div>
+
+        <label class="field">
+          <span>Опис</span>
+          <textarea class="input" id="fDesc" rows="3" maxlength="300" placeholder="Склад або короткий опис"></textarea>
+        </label>
+
+        <div class="checks">
+          <label><input type="checkbox" id="fNew" /> Новинка</label>
+          <label><input type="checkbox" id="fSpicy" /> Гостро</label>
+          <label><input type="checkbox" id="fStock" checked /> Є в наявності</label>
+        </div>
+
+        <p class="error" id="formError" hidden></p>
+        <div class="actions">
+          <button class="btn" type="submit" id="saveBtn">Додати товар</button>
+          <button class="btn btn--ghost" type="button" id="cancelEditBtn" hidden>Скасувати редагування</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Список товарів -->
+    <section class="panel panel--list">
+      <div class="list-head">
+        <h2>Товари <span class="muted" id="countLabel"></span></h2>
+        <input class="input input--search" id="listSearch" type="search" placeholder="Пошук за назвою" />
+      </div>
+      <div class="list" id="productList"></div>
+    </section>
+  </main>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+<script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,1621 @@
+/* ===== Дизайн-токени ===== */
+:root {
+  --bg: #0D0D0C;
+  --bg-alt: #161513;
+  --card: #1B1A17;
+  --accent: #C9A24B;
+  --accent-soft: rgba(201, 162, 75, 0.14);
+  --text: #F3F1EA;
+  --text-muted: #8F8B82;
+  --border: rgba(255, 255, 255, 0.08);
+  --radius: 14px;
+  --radius-sm: 8px;
+  --header-h: 76px;
+  --gap: 24px;
+
+  --font-display: "Fraunces", serif;
+  --font-ui: "Manrope", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+}
+
+body { padding-bottom: 40px; }
+
+input, button { font-family: inherit; }
+
+a { color: inherit; }
+
+/* Атрибут hidden має завжди ховати елемент. Без цього будь-який клас із display:flex
+   (екран «Замовлення прийнято», рядок знижки тощо) перебиває hidden і показується завжди. */
+[hidden] { display: none !important; }
+
+.icon { width: 18px; height: 18px; flex: none; display: block; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ===== Header ===== */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  height: var(--header-h);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+  padding: 0 32px;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand { display: flex; align-items: center; gap: 12px; }
+
+.brand__mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 18px;
+  color: var(--accent);
+}
+
+.brand__text { display: flex; flex-direction: column; line-height: 1.25; }
+
+.brand__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 17px;
+}
+
+.brand__addr { font-size: 12px; color: var(--text-muted); }
+
+.search {
+  position: relative;
+  max-width: 420px;
+  width: 100%;
+  justify-self: center;
+}
+
+.search__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px 10px 38px;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 150ms ease-out;
+}
+
+.search input:focus { border-color: var(--accent); }
+.search input::placeholder { color: var(--text-muted); }
+
+.section-toggle {
+  display: flex;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.section-toggle__btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 200ms ease-out, color 200ms ease-out;
+}
+
+.section-toggle__btn.is-active {
+  background: var(--accent);
+  color: #171410;
+}
+
+/* ===== Стрічка категорій ===== */
+.cat-strip-wrap {
+  position: sticky;
+  top: var(--header-h);
+  z-index: 19;
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 8px;
+}
+
+.cat-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  padding: 14px 8px;
+  flex: 1;
+  scrollbar-width: none;
+}
+.cat-strip::-webkit-scrollbar { display: none; }
+
+.cat-chip {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 250ms ease-out, color 250ms ease-out, border-color 250ms ease-out;
+}
+
+.cat-chip.is-active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.cat-arrow {
+  flex: 0 0 auto;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cat-arrow:hover { color: var(--accent); border-color: var(--accent); }
+
+/* ===== Layout ===== */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--gap);
+  padding: var(--gap) 32px;
+  align-items: start;
+}
+
+.catalog {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: var(--gap);
+}
+
+.sidebar {
+  position: sticky;
+  top: calc(var(--header-h) + 56px + var(--gap));
+  max-height: calc(100vh - var(--header-h) - 56px - var(--gap) * 2);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.widget {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  height: auto;
+}
+
+.widget__title {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Заголовок віджета: [іконка в квадраті] Назва ........ [стрілка] */
+.widget__title-left { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.widget__icon {
+  position: relative;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  display: grid;
+  place-items: center;
+  transition: transform 200ms ease-out;
+}
+.icon--chev { width: 16px; height: 16px; color: var(--text-muted); transition: transform 150ms ease-out, color 150ms ease-out; }
+.widget__title-btn:hover .icon--chev { color: var(--accent); transform: translateX(2px); }
+
+.cart-icon.is-pulsing { animation: cartPulse 400ms ease-out; }
+@keyframes cartPulse {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+
+.cart-icon__badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #171410;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-ui);
+}
+
+.widget__empty, .widget__hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.widget__input {
+  width: 100%;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--text);
+  font-size: 13px;
+  margin-bottom: 8px;
+  outline: none;
+}
+.widget__input:focus { border-color: var(--accent); }
+
+.widget__link {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 13px;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+/* ===== Кошик у сайдбарі ===== */
+.cart-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  animation: fadeIn 150ms ease-out;
+}
+.cart-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+.cart-item__name {
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.3;
+  grid-column: 1;
+}
+
+.cart-item__price {
+  grid-column: 2;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+.cart-item__controls {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cart-item__qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 3px 8px;
+}
+
+.cart-item__qty-btn {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.cart-item__qty-value { min-width: 14px; text-align: center; font-size: 12px; font-weight: 600; }
+
+.cart-item__remove {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+.cart-item__remove:hover { color: #E0664C; }
+
+/* ===== Прогрес безкоштовної доставки ===== */
+.free-shipping { margin-bottom: 14px; }
+
+.free-shipping__bar {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--bg-alt);
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.free-shipping__fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  width: 0%;
+  transition: width 300ms ease-out;
+}
+
+.free-shipping__text {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.free-shipping__text.is-done { color: var(--accent); font-weight: 600; }
+
+/* ===== Up-sell у кошику ===== */
+.upsell { margin-bottom: 14px; }
+
+.upsell__title {
+  margin: 0 0 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.upsell__list { display: flex; flex-direction: column; gap: 8px; }
+
+.upsell__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+}
+
+.upsell__item-name {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.upsell__item-price {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: block;
+}
+
+.upsell__add {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+.upsell__add:hover { background: var(--accent); color: #171410; }
+
+/* ===== Підсумок кошика ===== */
+.cart-summary { margin-bottom: 14px; }
+
+.cart-summary__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 4px 0;
+}
+
+.cart-summary__row--discount { color: var(--accent); }
+
+.cart-summary__row--total {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+.btn-checkout {
+  width: 100%;
+  background: var(--accent);
+  color: #171410;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease-out;
+}
+.btn-checkout:active { transform: scale(0.98); }
+
+/* ===== Промокод ===== */
+.promo-row { display: flex; gap: 8px; }
+.promo-row .widget__input { margin-bottom: 0; }
+
+.promo-apply {
+  flex: 0 0 auto;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+.promo-apply:hover { background: var(--accent); color: #171410; }
+
+.promo-feedback {
+  margin: 8px 0 0;
+  font-size: 12px;
+  min-height: 14px;
+}
+.promo-feedback.is-success { color: var(--accent); }
+.promo-feedback.is-error { color: #E0664C; }
+
+.payment-options { display: flex; gap: 8px; }
+
+.payment-option {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--bg-alt);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 150ms ease-out, color 150ms ease-out;
+}
+
+.payment-option.is-active {
+  background: var(--accent);
+  color: #171410;
+  border-color: var(--accent);
+}
+
+/* ===== Картка товару ===== */
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  transition: transform 200ms ease-out, box-shadow 200ms ease-out;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+}
+
+.card__image {
+  aspect-ratio: 4 / 3;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 32px;
+  color: rgba(243, 241, 234, 0.5);
+  background: linear-gradient(150deg, var(--bg-alt), var(--card));
+}
+
+.card__badges {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  gap: 6px;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(13, 13, 12, 0.75);
+  border: 1px solid var(--border);
+}
+.badge--new { color: var(--accent); border-color: var(--accent); }
+.badge--spicy { color: #E0664C; border-color: #E0664C; }
+
+.card__body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex: 1;
+}
+
+.card__name {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.card__unit { font-size: 12px; color: var(--text-muted); }
+
+.card__desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 6px;
+  gap: 8px;
+}
+
+.card__price {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--accent);
+}
+
+/* Ціна забирає вільне місце зліва, тож сердечко стоїть упритул до кнопки «+».
+   (Раніше margin-right:auto тут перебивався правилом .like-btn нижче.) */
+.card__price { margin-right: auto; }
+.like-btn.card__likes { margin-right: -4px; }
+
+/* Кнопка-сердечко (картка і модалка). Червоний — лише для активного стану. */
+.like-btn {
+  --like: #e0664c;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 8px;
+  margin: -4px -8px; /* збільшує зону натискання, не зсуваючи розкладку */
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 150ms ease-out, background 150ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+.like-btn__icon { font-size: 16px; display: inline-block; transition: transform 150ms ease-out; }
+/* hover лише там, де є миша: на телефоні він «залипає» рожевим після тапу */
+@media (hover: hover) {
+  .like-btn:hover { color: var(--like); background: rgba(224, 102, 76, 0.1); }
+}
+.like-btn:active .like-btn__icon { transform: scale(0.85); }
+.like-btn:focus-visible { outline: 2px solid var(--like); outline-offset: 2px; }
+.like-btn.is-liked { color: var(--like); }
+.like-btn.is-pop .like-btn__icon { animation: likePop 380ms cubic-bezier(0.3, 1.6, 0.5, 1); }
+@keyframes likePop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .like-btn.is-pop .like-btn__icon { animation: none; }
+}
+
+.modal__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+.modal__meta .modal__unit { margin: 0; }
+.like-btn--modal { font-size: 14px; margin: 0; padding: 6px 10px; border: 1px solid var(--border); }
+.like-btn--modal .like-btn__icon { font-size: 18px; }
+
+.card__quick-add {
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 120ms ease-out, background 150ms ease-out, color 150ms ease-out;
+}
+.card__quick-add:hover { background: var(--accent); color: #171410; }
+.card__quick-add:active { transform: scale(0.88); }
+
+/* ===== Skeleton ===== */
+.skeleton .card__image,
+.skeleton .skel-line {
+  background: linear-gradient(90deg, var(--card) 25%, var(--bg-alt) 37%, var(--card) 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+  color: transparent;
+}
+.skel-line { height: 12px; border-radius: 4px; margin-bottom: 6px; }
+.skel-line--60 { width: 60%; }
+.skel-line--40 { width: 40%; }
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: -100% 0; }
+}
+
+/* ===== Модальне вікно товару ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  padding: 20px;
+  animation: fadeIn 200ms ease-out;
+}
+.modal-overlay[hidden] { display: none; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  animation: modalIn 200ms ease-out;
+}
+
+@keyframes modalIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.modal__close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(13, 13, 12, 0.6);
+  color: var(--text);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.modal__image {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(150deg, var(--bg-alt), var(--card));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 48px;
+  color: rgba(243, 241, 234, 0.5);
+}
+
+.modal__body { padding: 20px 24px 24px; }
+
+.modal__badges { display: flex; gap: 6px; margin-bottom: 10px; }
+
+.modal__title {
+  margin: 0 0 4px;
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+
+.modal__unit { margin: 0 0 10px; font-size: 13px; color: var(--text-muted); }
+.modal__desc { margin: 0 0 20px; font-size: 14px; color: var(--text-muted); line-height: 1.5; }
+
+.modal__footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.qty {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+}
+
+.qty__btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 16px;
+  line-height: 1;
+  transition: transform 120ms ease-out;
+}
+.qty__btn:active { transform: scale(0.9); }
+
+.qty__value { min-width: 16px; text-align: center; font-weight: 600; }
+
+.btn-add {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--accent);
+  color: #171410;
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 12px 18px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 120ms ease-out;
+}
+.btn-add:active { transform: scale(0.98); }
+
+/* ===== Мобільна панель кошика ===== */
+.mobile-cart-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--accent);
+  color: #171410;
+  padding: 14px 20px;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 120ms ease-out;
+}
+.mobile-cart-bar[hidden] { display: none; }
+.mobile-cart-bar:active { transform: scale(0.98); }
+.mobile-cart-bar.is-pulsing { animation: cartPulse 400ms ease-out; }
+
+/* ===== Анімація "польоту" товару в кошик ===== */
+.fly-dot {
+  position: fixed;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  z-index: 200;
+  pointer-events: none;
+  box-shadow: 0 0 0 4px var(--accent-soft);
+}
+
+/* ===== Checkout drawer (на весь екран) ===== */
+.checkout-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: flex-end;
+  animation: fadeIn 200ms ease-out;
+}
+.checkout-drawer[hidden] { display: none; }
+
+.checkout-drawer__panel {
+  position: relative;
+  width: min(480px, 100%);
+  height: 100%;
+  overflow-y: auto;
+  background: var(--bg-alt);
+  border-left: 1px solid var(--border);
+  padding: 24px 24px 32px;
+  animation: drawerIn 250ms ease-out;
+}
+
+@keyframes drawerIn {
+  from { transform: translateX(24px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.checkout-drawer__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+}
+
+.checkout-drawer__title {
+  margin: 0 32px 20px 0;
+  font-family: var(--font-display);
+  font-size: 22px;
+}
+
+.checkout-section {
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border);
+}
+.checkout-section:last-of-type { border-bottom: none; }
+
+.checkout-section__title {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.delivery-toggle {
+  display: flex;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 3px;
+  margin-bottom: 14px;
+}
+
+.delivery-toggle__btn {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 9px 0;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 200ms ease-out, color 200ms ease-out;
+}
+.delivery-toggle__btn.is-active { background: var(--accent); color: #171410; }
+
+.checkout-field { margin-bottom: 12px; }
+.checkout-field:last-child { margin-bottom: 0; }
+
+.checkout-field label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.checkout-comment { resize: vertical; font-family: inherit; }
+
+.checkout-hint {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.checkout-items { display: flex; flex-direction: column; gap: 8px; }
+
+.checkout-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+  gap: 8px;
+}
+
+.checkout-item-row__name { color: var(--text); }
+.checkout-item-row__meta { color: var(--text-muted); font-size: 12px; white-space: nowrap; }
+
+/* Керування кількістю прямо в оформленні (на телефоні іншого кошика нема). */
+.checkout-item-row { gap: 10px; }
+.checkout-item-row__info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.checkout-item-row__qty {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+}
+.checkout-item-row__btn,
+.checkout-item-row__remove {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.checkout-item-row__btn { width: 36px; height: 36px; font-size: 18px; border-radius: 50%; }
+.checkout-item-row__btn:active { background: var(--accent-soft); color: var(--accent); }
+.checkout-item-row__qty-value { min-width: 20px; text-align: center; font-size: 14px; font-weight: 600; }
+.checkout-item-row__remove {
+  flex: 0 0 auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+.checkout-item-row__remove:active { color: #E0664C; background: rgba(224, 102, 76, 0.12); }
+@media (hover: hover) {
+  .checkout-item-row__btn:hover { background: var(--accent-soft); color: var(--accent); }
+  .checkout-item-row__remove:hover { color: #E0664C; }
+}
+
+.checkout-totals { margin: 4px 0 16px; }
+
+.checkout-error {
+  margin: 0 0 14px;
+  font-size: 13px;
+  color: #E0664C;
+  background: rgba(224, 102, 76, 0.1);
+  border: 1px solid rgba(224, 102, 76, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.checkout-submit { width: 100%; justify-content: center; gap: 8px; }
+.checkout-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ===== Екран підтвердження замовлення ===== */
+.checkout-confirm {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.checkout-confirm__icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  margin-bottom: 8px;
+}
+
+.checkout-confirm__number {
+  font-family: var(--font-display);
+  font-size: 20px;
+  color: var(--accent);
+  margin: 0;
+}
+
+.checkout-confirm__text {
+  margin: 0 0 16px;
+  font-size: 13px;
+  color: var(--text-muted);
+  max-width: 320px;
+}
+
+/* ===== Адаптив ===== */
+
+/* Планшет: сайдбар ховається, каталог у 2 колонки */
+@media (max-width: 1199px) {
+  .layout { grid-template-columns: 1fr; }
+  .sidebar { display: none; }
+  .catalog { grid-template-columns: repeat(2, 1fr); }
+  body { padding-bottom: 90px; }
+}
+
+/* Мобільна версія */
+@media (max-width: 767px) {
+  .header {
+    grid-template-columns: 1fr auto;
+    grid-template-areas: "brand toggle" "search search";
+    height: auto;
+    padding: 12px 16px;
+    row-gap: 10px;
+  }
+  .brand { grid-area: brand; }
+  .section-toggle { grid-area: toggle; }
+  .search { grid-area: search; max-width: none; }
+
+  .layout { padding: 16px; }
+  .catalog { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+
+  .checkout-drawer { justify-content: stretch; }
+  .checkout-drawer__panel { width: 100%; border-left: none; padding: 18px 16px 28px; }
+}
+/* ===== Кнопка-заголовок віджета (клік відкриває попап) ===== */
+.widget__title-btn {
+  all: unset;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  transition: color 150ms ease-out;
+}
+.widget__title-btn:hover { color: var(--accent); }
+
+/* ===== Загальний попап ===== */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 70;
+  padding: 20px;
+  animation: fadeIn 200ms ease-out;
+}
+.popup-overlay[hidden] { display: none; }
+
+.popup {
+  position: relative;
+  width: min(520px, 100%);
+  max-height: 88vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  animation: modalIn 220ms ease-out;
+}
+
+.popup--payment { width: min(440px, 100%); }
+
+.popup__close { top: 14px; right: 14px; }
+
+.popup__title {
+  margin: 0 32px 4px 0;
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+.popup__subtitle {
+  margin: 0 0 16px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.popup__body { flex: 1; overflow-y: auto; margin-bottom: 16px; }
+.popup__empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 13px;
+  padding: 30px 0;
+}
+.popup__footer {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ===== Список товарів у попапі каталогу ===== */
+.popup-cart-list { display: flex; flex-direction: column; gap: 10px; }
+
+.popup-cart-item {
+  display: grid;
+  grid-template-columns: 44px 1fr auto auto;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  animation: fadeIn 180ms ease-out;
+}
+
+.popup-cart-item__thumb {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(150deg, var(--bg-alt), var(--card));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  color: var(--accent);
+  font-size: 18px;
+  border: 1px solid var(--border);
+}
+
+.popup-cart-item__info { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.popup-cart-item__name { font-size: 13px; font-weight: 600; line-height: 1.3; }
+.popup-cart-item__meta { font-size: 11px; color: var(--text-muted); }
+.popup-cart-item__price { font-size: 13px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+
+.popup-cart-item__remove {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+.popup-cart-item__remove:hover {
+  background: rgba(224, 102, 76, 0.15);
+  border-color: #E0664C;
+  color: #E0664C;
+  transform: rotate(90deg);
+}
+
+/* ===== Візуал картки ===== */
+.card-visual {
+  position: relative;
+  aspect-ratio: 1.6 / 1;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #1B1A17 0%, #2a2620 50%, #C9A24B 140%);
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+}
+.card-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% 20%, rgba(201,162,75,0.18), transparent 60%);
+  pointer-events: none;
+}
+.card-visual__chip {
+  width: 36px;
+  height: 26px;
+  border-radius: 5px;
+  background: linear-gradient(135deg, #C9A24B, #8a6d2c);
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.card-visual__number {
+  font-family: var(--font-ui);
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  color: var(--text);
+  font-weight: 600;
+}
+.card-visual__bottom { display: flex; flex-direction: column; gap: 2px; }
+.card-visual__bottom--right { position: absolute; right: 18px; bottom: 18px; }
+.card-visual__label { font-size: 9px; letter-spacing: 0.1em; color: var(--text-muted); }
+.card-visual__value { font-size: 12px; color: var(--text); font-weight: 600; letter-spacing: 0.05em; }
+
+.checkout-field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ===== Кнопка оплати карткою в чекауті ===== */
+.btn-card-pay {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--accent);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease-out;
+}
+.btn-card-pay:hover { background: var(--accent); color: #171410; }
+.btn-card-pay[hidden] { display: none; }
+.btn-card-pay.is-filled {
+  border-style: solid;
+  background: rgba(201, 162, 75, 0.25);
+}
+
+/* ===== Стан завантаження / успіху ===== */
+.btn-add.is-loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+.btn-add.is-loading::after {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+  margin-left: 8px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.btn-add.is-success {
+  background: #3fa46a;
+  color: #fff;
+  animation: successPop 400ms ease-out;
+}
+@keyframes successPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.03); }
+  100% { transform: scale(1); }
+}
+
+/* ===== Успішна оплата ===== */
+.payment-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 0 8px;
+  animation: fadeIn 250ms ease-out;
+}
+.payment-success__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px;
+  animation: successPop 500ms ease-out;
+}
+.payment-success__text { margin: 0; font-size: 13px; color: var(--text-muted); }
+
+/* ===== Shake для помилок ===== */
+.shake { animation: shake 400ms ease-out; }
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+/* ===== Адаптив попапів ===== */
+@media (max-width: 520px) {
+  .popup { padding: 20px 16px; }
+  .popup-cart-item { grid-template-columns: 36px 1fr auto; gap: 8px; }
+  .popup-cart-item__thumb { width: 36px; height: 36px; }
+  .popup-cart-item__remove { grid-column: 3; }
+  .popup-cart-item__price { grid-column: 3; grid-row: 1; }
+  .card-visual { aspect-ratio: 1.5 / 1; padding: 14px; }
+  .card-visual__number { font-size: 15px; }
+}
+
+
+/* =====================================================================
+   Доопрацювання: фото товарів, поля форм, картка, вікна успіху, тач-екрани
+   ===================================================================== */
+
+/* ----- Способи оплати з іконками ----- */
+.payment-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 10px;
+  font-size: 13px;
+}
+.payment-option .icon { width: 16px; height: 16px; }
+
+/* ----- Кнопки: не розтягуються по вертикалі, одиночний підпис по центру ----- */
+.btn-add > span:only-child { margin: 0 auto; }
+.btn-add:disabled { opacity: 0.45; cursor: not-allowed; }
+.checkout-confirm .btn-add,
+.popup__footer .btn-add {
+  flex: none;
+  width: 100%;
+  max-width: 320px;
+  align-self: center;
+}
+.popup__footer .btn-add { max-width: none; }
+
+/* ----- Фото в картках, модалці й кошику ----- */
+.card__image { overflow: hidden; }
+.card__image img,
+.modal__image img,
+.popup-cart-item__thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.card__image img { position: absolute; inset: 0; }
+.card__badges { z-index: 1; flex-wrap: wrap; right: 10px; }
+.modal__image { position: relative; overflow: hidden; }
+.popup-cart-item__thumb { overflow: hidden; }
+
+.card.is-sold-out { opacity: 0.7; }
+.card.is-sold-out .card__image img { filter: grayscale(0.85); }
+.badge--out { color: var(--text-muted); }
+.card__quick-add:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+/* ----- Поля форм ----- */
+.checkout-field .widget__input { margin-bottom: 0; }
+.checkout-field label em { font-style: normal; font-size: 11px; opacity: 0.6; margin-left: 4px; }
+.checkout-field-row--3 { grid-template-columns: repeat(3, 1fr); }
+.checkout-field-row .checkout-field { min-width: 0; }
+
+.field-error { margin: 6px 0 0; font-size: 12px; line-height: 1.35; color: #E0664C; }
+.widget__input.is-invalid,
+.phone-field.is-invalid { border-color: #E0664C; }
+
+.phone-field {
+  display: flex;
+  align-items: stretch;
+  background: var(--bg-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.phone-field:focus-within { border-color: var(--accent); }
+.phone-field__prefix {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.04);
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+}
+.phone-field__input {
+  flex: 1;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+
+.city-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 700;
+}
+.city-chip .icon { width: 16px; height: 16px; }
+.city-chip span { margin-left: auto; font-size: 11px; font-weight: 500; color: var(--text-muted); text-align: right; }
+
+.cash-hint {
+  margin-top: 12px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+/* ----- Підказки вулиць ----- */
+.ac { position: relative; }
+.ac .widget__input { margin-bottom: 0; }
+.widget--delivery .ac { margin-bottom: 8px; }
+.ac__list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 50;
+  margin: 0;
+  padding: 4px;
+  list-style: none;
+  max-height: 260px;
+  overflow-y: auto;
+  background: #23211c;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5);
+}
+.ac__item {
+  display: flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+}
+.ac__item:hover,
+.ac__item.is-active { background: var(--accent-soft); color: var(--accent); }
+.ac__empty { padding: 12px; font-size: 13px; color: var(--text-muted); }
+
+/* ----- Картка (візуал) ----- */
+.card-visual__top { display: flex; justify-content: space-between; align-items: flex-start; position: relative; z-index: 1; }
+.card-visual__brand { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: var(--accent); }
+.card-visual__number,
+.card-visual__bottom:not(.card-visual__bottom--right) { position: relative; z-index: 1; }
+.card-visual__bottom--right { z-index: 1; }
+.popup--payment .popup__title { margin-bottom: 16px; }
+.card-visual__number { white-space: nowrap; }
+
+.demo-note {
+  margin: 12px 0 0;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ----- Успіх оплати: замість форми, по центру вікна ----- */
+.payment-success { padding: 36px 0 28px; gap: 10px; text-align: center; }
+.payment-success__icon .icon,
+.checkout-confirm__icon .icon { width: 28px; height: 28px; }
+.payment-success__title { margin: 8px 0 0; font-family: var(--font-display); font-size: 20px; }
+
+/* ----- Успіх замовлення: на ПК окреме вікно по центру ----- */
+.checkout-drawer.is-confirmed { justify-content: center; align-items: center; padding: 16px; }
+.checkout-drawer.is-confirmed .checkout-drawer__panel {
+  width: min(440px, 100%);
+  height: auto;
+  max-height: 100%;
+  padding: 36px 28px 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  animation: modalIn 240ms ease-out;
+}
+.checkout-drawer.is-confirmed .checkout-confirm { min-height: 0; }
+.checkout-drawer.is-confirmed .checkout-drawer__title { margin-right: 0; }
+.checkout-confirm__icon { animation: successPop 500ms ease-out; }
+.checkout-confirm__text { line-height: 1.5; }
+
+/* ----- Сенсорні екрани (Android / iPhone) ----- */
+@media (hover: hover) {
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35); }
+}
+@media (hover: none) {
+  .card:hover { transform: none; box-shadow: none; }
+}
+@media (pointer: coarse) {
+  .card__quick-add { width: 40px; height: 40px; font-size: 20px; }
+  .qty__btn { width: 36px; height: 36px; }
+  .cart-item__qty-btn { width: 32px; height: 32px; }
+  .upsell__add { width: 36px; height: 36px; }
+  .popup-cart-item__remove { width: 36px; height: 36px; }
+  .modal__close { width: 40px; height: 40px; }
+  .delivery-toggle__btn { padding: 12px 0; }
+  .payment-option { min-height: 46px; }
+}
+
+@media (max-width: 767px) {
+  /* 16px у полях — інакше iPhone збільшує сторінку при фокусі */
+  .widget__input,
+  .phone-field__input,
+  .search input { font-size: 16px; }
+  .phone-field__prefix { font-size: 15px; }
+  .checkout-field-row { gap: 10px; }
+  .card__body { padding: 12px; }
+  .card__name { font-size: 13px; }
+  .city-chip span { display: none; }
+}
+
+/* Безпечні зони iPhone (виріз і нижня смуга) та динамічна висота екрана */
+.mobile-cart-bar { padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px)); }
+.checkout-drawer__panel { height: 100dvh; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+.popup { max-height: 88dvh; }
+.modal { max-height: 92dvh; overflow-y: auto; }
+
+/* На ПК кошик і так видно в сайдбарі — нижня панель потрібна лише на планшеті/телефоні */
+@media (min-width: 1200px) {
+  .mobile-cart-bar { display: none !important; }
+}
+
+/* Попап оплати на низьких екранах: прокрутка всередині, а не вихід контенту за межі */
+.popup--payment { overflow-y: auto; overscroll-behavior: contain; }
+.popup--payment > * { flex-shrink: 0; }
+@media (max-width: 520px) {
+  .card-visual { aspect-ratio: 1.75 / 1; max-width: 340px; margin-left: auto; margin-right: auto; }
+  .popup--payment .popup__title { font-size: 18px; }
+}
+
+/* Кнопка «Додати в кошик» у модалці: підпис і ціна не переносяться на другий рядок */
+.btn-add span { white-space: nowrap; }
+.modal__footer { gap: 10px; }
+.modal__footer .btn-add { gap: 10px; padding: 12px 14px; min-width: 0; }
+@media (max-width: 420px) {
+  .qty { gap: 6px; padding: 4px 6px; }
+}
+
+/* ===== Модалка товару на вузьких екранах (Samsung A53 ≈ 412 px і менше) =====
+   Раніше «кількість» і «Додати в кошик» стояли в один рядок: підпис кнопки
+   (white-space: nowrap) вилазив за її межі, а модалку можна було свайпнути вбік.
+   Тепер: кількість над кнопкою, кнопка на всю ширину, горизонтального скролу нема. */
+.modal { overflow-x: hidden; overscroll-behavior: contain; }
+@media (max-width: 480px) {
+  .modal__footer { flex-direction: column; align-items: stretch; gap: 12px; }
+  .modal__footer .qty { justify-content: space-between; }
+  .modal__footer .btn-add { width: 100%; justify-content: center; gap: 12px; }
+}
