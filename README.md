@@ -74,7 +74,7 @@
 
 ## Quick start
 
-Requires **Node.js 22.5 or newer** (because of `node:sqlite`). Check with `node -v`. Works on Linux, macOS and Windows.
+Requires **Node.js 22.5 or newer** (because of `node:sqlite`). Check with `node -v`. Tested on Linux and Windows 11 (macOS should work too — there are no native dependencies).
 
 ```sh
 git clone https://github.com/07NORTH07/gost-bar-site.git
@@ -115,6 +115,22 @@ npm run start:env
 | `TRUST_PROXY` | off (enabled automatically on Render) | set to `1` if the site is behind a reverse proxy, so rate limits use the client's real IP |
 
 One-off password without a file: `ADMIN_PASSWORD='my-password' npm start` (bash/zsh) or `env ADMIN_PASSWORD='my-password' npm start` (fish).
+
+**Windows:**
+
+```bat
+:: cmd
+copy .env.example .env
+set ADMIN_PASSWORD=my-password && npm start
+```
+
+```powershell
+# PowerShell
+Copy-Item .env.example .env
+$env:ADMIN_PASSWORD='my-password'; npm start
+```
+
+If PowerShell complains that running scripts is disabled, use `cmd` or run `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
 > ⚠️ If you deploy this anywhere public, **always set your own `ADMIN_PASSWORD`**.
 
@@ -280,7 +296,7 @@ The venue name, address and menu items in `seed.js` are for demonstration, colle
 
 ## Швидкий старт
 
-Потрібен **Node.js 22.5 або новіший** (через `node:sqlite`). Перевірити: `node -v`. Працює на Linux, macOS і Windows.
+Потрібен **Node.js 22.5 або новіший** (через `node:sqlite`). Перевірити: `node -v`. Перевірено на Linux і Windows 11 (на macOS теж має працювати — native-залежностей немає).
 
 ```sh
 git clone https://github.com/07NORTH07/gost-bar-site.git
@@ -321,6 +337,22 @@ npm run start:env
 | `TRUST_PROXY` | вимкнено (на Render вмикається сам) | `1`, якщо сайт стоїть за reverse-proxy — тоді ліміти запитів рахуються по справжній IP клієнта |
 
 Разова зміна пароля без файлу: `ADMIN_PASSWORD='мій-пароль' npm start` (bash/zsh) або `env ADMIN_PASSWORD='мій-пароль' npm start` (fish).
+
+**Windows:**
+
+```bat
+:: cmd
+copy .env.example .env
+set ADMIN_PASSWORD=мій-пароль && npm start
+```
+
+```powershell
+# PowerShell
+Copy-Item .env.example .env
+$env:ADMIN_PASSWORD='мій-пароль'; npm start
+```
+
+Якщо PowerShell пише, що виконання скриптів вимкнено, користуйтеся `cmd` або виконайте `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
 
 > ⚠️ Якщо публікуєте сайт у мережі, **обов'язково задайте власний `ADMIN_PASSWORD`**.
 
